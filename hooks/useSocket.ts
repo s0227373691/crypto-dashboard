@@ -1,6 +1,6 @@
 /** @format */
 
-const useSocket = (url: string) => {
+const useSocket = (url: string): WebSocket => {
   return new WebSocket(url);
 };
 
