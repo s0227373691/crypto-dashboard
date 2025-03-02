@@ -25,7 +25,7 @@ const CryptoMarketOverviewUI = () => {
       <div>
         <h1 className="font-bold text-lg flex items-center gap-2 cursor-pointer text-black dark:text-white">
           {ticker?.instrument_name}
-          <svg
+          {/* <svg
             className="w-4 h-4 text-gray-800 dark:text-white"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@ const CryptoMarketOverviewUI = () => {
             viewBox="0 0 16 10"
           >
             <path d="M15.434 1.235A2 2 0 0 0 13.586 0H2.414A2 2 0 0 0 1 3.414L6.586 9a2 2 0 0 0 2.828 0L15 3.414a2 2 0 0 0 .434-2.179Z" />
-          </svg>
+          </svg> */}
         </h1>
       </div>
       <div className="flex justify-center items-center font-semibold">
