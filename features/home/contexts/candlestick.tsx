@@ -11,49 +11,59 @@ import React, {
 } from "react";
 import { METHODS, RESULT_CHANNEL } from "@/constants/crypto-com-socket";
 
-interface TickerData {
-  h: string;
-  l: string;
-  a: string;
-  c: string;
-  b: string;
-  bs: string;
-  k: string;
-  ks: string;
-  i: string;
-  v: string;
-  vv: string;
-  oi: string;
-  t: number;
+type Interval =
+  | "1m"
+  | "5m"
+  | "15m"
+  | "30m"
+  | "1h"
+  | "2h"
+  | "4h"
+  | "12h"
+  | "1D"
+  | "7D"
+  | "14D"
+  | "1M";
+
+interface CandlestickData {
+  o: number; // Open
+  h: number; //	High
+  l: number; //	Low
+  c: number; //	Close
+  v: number; //	Volume
+  t: number; //  Timestamp
 }
 
-interface TickerContext {
-  ticker: {
+interface CandlestickContext {
+  candlestick: {
     instrument_name: string;
     subscription: string;
-    channel: RESULT_CHANNEL.TICKER;
-    data: TickerData[];
+    channel: RESULT_CHANNEL.CANDLESTICK;
+    interval: Interval;
+    data: CandlestickData[];
   } | null;
 }
 
-export const TickerContext = createContext<TickerContext | undefined>(
+export const CandlestickContext = createContext<CandlestickContext | undefined>(
   undefined
 );
 
-export const useTickerContext = () => {
-  const context = useContext(TickerContext);
+export const useCandlestickContext = () => {
+  const context = useContext(CandlestickContext);
   if (!context) {
-    throw new Error("useTickerContext must be used within TickerProvider");
+    throw new Error(
+      "useCandlestickContext must be used within CandlestickProvider"
+    );
   }
   return context;
 };
 
-export const TickerProvider: FC<{
-  value: { socket: WebSocket; symbol: string };
+export const CandlestickProvider: FC<{
+  value: { socket: WebSocket };
   children: React.ReactNode;
 }> = ({ value, children }) => {
-  const { socket, symbol } = value;
-  const [ticker, setTicker] = useState(null);
+  const { socket } = value;
+  const [candlestick, setCandlestick] = useState(null);
 
   useEffect(() => {
     socket.onopen = () => {
@@ -62,7 +72,7 @@ export const TickerProvider: FC<{
       const param = {
         method: METHODS.SUBSCRIBE,
         params: {
-          channels: ["ticker.BTCUSD-PERP"],
+          channels: ["candlestick.1m.BTCUSD-PERP"],
         },
         nonce: Date.now(),
       };
@@ -79,11 +89,9 @@ export const TickerProvider: FC<{
       }
 
       if (parse.method === METHODS.SUBSCRIBE) {
-        // console.log("parse", parse.result);
         if (!parse.result) return;
-        const data = parse.result.data[0];
 
-        setTicker(parse.result);
+        setCandlestick(parse.result);
       }
     };
 
@@ -95,8 +103,8 @@ export const TickerProvider: FC<{
   }, []);
 
   return (
-    <TickerContext.Provider value={{ ticker }}>
+    <CandlestickContext.Provider value={{ candlestick }}>
       {children}
-    </TickerContext.Provider>
+    </CandlestickContext.Provider>
   );
 };

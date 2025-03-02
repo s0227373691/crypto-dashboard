@@ -1,6 +1,6 @@
 "use client";
 
-import RealTimeChart from "./ui/RealTimeChart";
+import RealTimeChart from "./containers/RealTimeChart";
 import CryptoMarketOverview from "./containers/CryptoMarketOverview";
 
 export default function HomePage() {

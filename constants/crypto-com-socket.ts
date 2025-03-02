@@ -9,4 +9,5 @@ export enum METHODS {
 export enum RESULT_CHANNEL {
   TICKER = "ticker",
   BOOK = "book",
+  CANDLESTICK = "candlestick",
 }
