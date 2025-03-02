@@ -26,9 +26,6 @@ const RealTimeChart = () => {
         tickMarkFormatter: (time: number) => {
           const date = new Date(time * 1000);
           return date.toLocaleString("zh-TW", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
@@ -57,16 +54,18 @@ const RealTimeChart = () => {
     if (!candlestick) return;
     if (!lineSeriesRef.current) return;
 
-    const format = candlestick?.data.map((item) => ({
-      time: (item.t / 1000) as UTCTimestamp,
-      open: +item.o,
-      high: +item.h,
-      low: +item.l,
-      close: +item.c,
-    }));
+    const lastCnadlestick = candlestick?.data.pop();
+    if (!lastCnadlestick) return;
 
-    const newTime = new Date("2024-02-23").toISOString().split("T")[0];
-    lineSeriesRef.current?.update(format[0]);
+    const formatLastCnadlestick = {
+      time: (lastCnadlestick.t / 1000) as UTCTimestamp,
+      open: +lastCnadlestick.o,
+      high: +lastCnadlestick.h,
+      low: +lastCnadlestick.l,
+      close: +lastCnadlestick.c,
+    };
+
+    lineSeriesRef.current?.update(formatLastCnadlestick);
   }, [candlestick]);
 
   return (
